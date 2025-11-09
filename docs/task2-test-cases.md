@@ -36,7 +36,6 @@ This legend describes the expected valid behaviour used as a reference in the te
 | **DC-P08** | Positive | Change shipping after discount applied          | Total increases by shipping only; discount unchanged        |
 | **DC-P09** | Positive | Replace one valid discount code with another    | New discount overrides previous; total recalculated         |
 | **DC-P10** | Positive | Clear discount code to remove discount          | Discount removed; total returns to full price               |
-
 | **DC-N01** | Negative | Empty discount code                             | Error “Please enter a code”; no discount                    |
 | **DC-N02** | Negative | Code with only spaces                           | Error message shown; no discount                            |
 | **DC-N03** | Negative | Completely invalid code                         | “Invalid discount code”; total unchanged                    |
@@ -44,11 +43,9 @@ This legend describes the expected valid behaviour used as a reference in the te
 | **DC-N05** | Negative | Internal spaces in code (`SA VE10`)             | Invalid; error shown                                        |
 | **DC-N06** | Negative | Invalid code followed by valid code             | First shows error; valid replaces it successfully           |
 | **DC-N07** | Negative | Discount with invalid quantity (0 or negative)  | No negative price; enforce Quantity ≥ 1                     |
-
 | **DC-OB01** | Negative / Order | Discount error visible, try to order   | Order blocked until error cleared                           |
 | **DC-OB02** | Negative / Order | Fix invalid code, then order           | Error cleared; success message shown                        |  
 | **DC-OB03** | Negative / Order | No discount entered                    | Order proceeds normally; no blocking                        |
-
 | **DC-PF01** | Performance | Apply valid discount (`SAVE10`)             | Update & success message < 100 ms                           |
 | **DC-PF02** | Performance | Apply invalid code                          | Error shown immediately; no lag                             |
 
