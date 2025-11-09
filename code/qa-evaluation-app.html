@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Evaluation Challenge</title>
+    <!-- 
+      This is a single-file app for a QA evaluation. 
+      It is intentionally filled with functional and non-functional bugs.
+      Candidates are expected to find and report them.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles, some of which are intentionally buggy */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f5f7; /* Light gray background */
+        }
+        
+        @media (min-width: 640px) and (max-width: 767px) {
+            h1#form-title {
+                font-size: 2.5rem; /* Becomes too large */
+                margin-bottom: -1rem; /* Causes overlap */
+            }
+        }
+        
+        #shipping-express-label {
+            opacity: 0;
+            cursor: pointer; /* Still clickable, but invisible */
+        }
+        
+        #terms-helper {
+            display: block !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-8 p-6 bg-white rounded-lg shadow-md">
+            <h1 class="text-3xl font-bold text-center text-blue-700">QA Evaluation Portal</h1>
+            <p class="text-center text-gray-600 mt-2">Welcome! Please complete the three tasks below. Your goal is to find, document, and analyze the issues in this application.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Left Column: The Buggy App -->
+            <section class="bg-white rounded-lg shadow-md p-6">
+                <h1 id="form-title" class="text-2xl font-bold mb-6 text-center">Buggy Product Form</h1>
+                
+                <!-- Product Image Section -->
+                <div class="mb-4">
+                    <img src="https://placehold.co/600x400/3498db/ffffff?text=Awesome+Gadget"
+                         class="w-full h-auto rounded-lg shadow-inner border border-gray-200"
+                         onerror="this.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Load+Failed'; this.alt='Placeholder image indicating load failure'">
+                </div>
+                
+                <h2 class="text-xl font-semibold">Awesome Gadget</h2>
+                <p class="text-lg text-gray-700 mb-4">A cool gadget that does amazing things. (Base Price: $99.99)</p>
+
+                <!-- Form Inputs -->
+                <div class="space-y-4">
+                    <!-- Quantity -->
+                    <div>
+                        <label id="quantity-label" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <input type="number" id="quantity-input" value="1" min="-1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Discount Code -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Discount Code</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input type="text" id="discount-input" placeholder="e.g., SAVE10" class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            <button id="apply-discount-btn" tabindex="-1" class="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Apply
+                            </button>
+                        </div>
+                        <p id="discount-message" class="text-sm mt-1 h-5"></p> <!-- Message area -->
+                    </div>
+
+                    <!-- Gift Wrap -->
+                    <div>
+                        <div class="flex items-center">
+                            <input id="gift-wrap-check" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="gift-wrap-check" class="ml-2 block text-sm text-gray-900">Add Gift Wrap (+$5.00)</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Option -->
+                    <fieldset>
+                        <legend class="text-sm font-medium text-gray-900">Shipping Option</legend>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input id="shipping-standard" name="shipping" type="radio" value="0.00" class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                                <label for="shipping-standard" class="ml-2 block text-sm text-gray-700">Standard (5-7 Days) - $0.00</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="shipping-priority" name="shipping" type="radio" value="7.50" class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="shipping-priority" class="ml-2 block text-sm text-gray-700">Priority (2-3 Days) - $7.50</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="shipping-express" name="shipping" type="radio" value="20.00" class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label id="shipping-express-label" for="shipping-express" class="ml-2 block text-sm text-gray-700">Express (1 Day) - $20.00</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Total Price -->
+                    <div class="pt-4 border-t border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <p class="text-lg font-medium text-gray-900">Total Price:</p>
+                            <p id="total-price" class="text-2xl font-bold text-blue-700">$99.99</p>
+                        </div>
+                    </div>
+
+                    <!-- Order Button -->
+                    <div class="pt-4">
+                        <div class="flex items-center mb-2">
+                            <input id="terms-check" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="terms-check" class="ml-2 block text-sm text-gray-900">
+                                I agree
+                                <span class="hidden sm:inline">to the Terms and Conditions</span>
+                            </label>
+                        </div>
+                        <button id="order-btn" class="w-full py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400" disabled>
+                            Order Now
+                        </button>
+                        <p id="terms-helper" class="text-xs text-gray-500 mt-1">You must agree to the T&C to order</p>
+                    </div>
+                </div>
+
+                <p id="order-message" class="text-lg text-center font-semibold mt-4 h-6"></p>
+
+            </section>
+
+            <!-- Right Column: The Tasks -->
+            <section class="space-y-8">
+                
+                <!-- Task 1: Bug Reports -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Task 1: Find the Bugs (Functional & Non-Functional)</h2>
+                    <p class="mb-4 text-gray-600">Explore the "Buggy Product Form" to your left. Identify as many bugs as you can. Include functional (e.g., "price doesn't update"), non-functional (e.g., "bad on mobile," "hard for screen readers"), and visual bugs.</p>
+                    <p class="mt-4 p-3 rounded-md bg-blue-50 border border-blue-200 text-blue-700">
+                        <strong>Instructions:</strong> Please open a separate document (e.g., Word, Google Docs) and write your bug reports there.
+                    </p>
+                </div>
+
+                <!-- Task 2: Test Cases -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Task 2: Write Test Cases</h2>
+                    <p class="mb-4 text-gray-600">For the **Discount Code** feature *only*, write a set of positive and negative test cases. Focus on clarity, no need to write comprehensive test cases. Imagine it's a check list.</p>
+                    <p class="mt-4 p-3 rounded-md bg-blue-50 border border-blue-200 text-blue-700">
+                        <strong>Instructions:</strong> In your document, please write your test cases for the Discount Code feature.
+                    </p>
+                </div>
+
+                <!-- Task 3: Automation Selectors -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Task 3: Automation & Selectors</h2>
+                    <p class="mb-4 text-gray-600">Imagine you need to automate a test for this form. The `id`, `class`, and `data-qa` attributes are **dynamic** and change on every page load (their prefix, e.g., `el-xyz-123`, is randomized). Write stable, resilient CSS or XPath selectors for the following elements:</p>
+                    <ul class="list-disc list-inside mb-4 space-y-2 text-gray-700">
+                        <li>The "Quantity" input field</li>
+                        <li>The "Apply Discount" button</li>
+                        <li>The "Total Price" text (the $ amount)</li>
+                        <li>The "Priority Shipping" radio button</li>
+                    </ul>
+                    <p class="mt-4 p-3 rounded-md bg-blue-50 border border-blue-200 text-blue-700">
+                        <strong>Instructions:</strong> In your document, please write the stable selectors for the elements listed above.
+                    </p>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- State Management (Slightly obfuscated) ---
+        const base = 99.99;
+        let qVal = 1;
+        let dVal = 0;
+        let gwc = 0;
+        let sc = 0;
+        let dApplied = false;
+
+        // --- Element References ---
+        const quantityInput = document.getElementById('quantity-input');
+        const discountInput = document.getElementById('discount-input');
+        const applyBtn = document.getElementById('apply-discount-btn');
+        const discountMsg = document.getElementById('discount-message');
+        const giftWrapCheck = document.getElementById('gift-wrap-check');
+        const shippingRadios = document.querySelectorAll('input[name="shipping"]');
+        const totalPriceEl = document.getElementById('total-price');
+        const termsCheck = document.getElementById('terms-check');
+        const orderBtn = document.getElementById('order-btn');
+        const orderMsg = document.getElementById('order-message');
+        const termsHelper = document.getElementById('terms-helper');
+
+        // --- Utility Functions ---
+        function updatePrice() {
+            const flawedTotal = (base - dVal) * qVal + gwc + sc;
+            totalPriceEl.textContent = `$${flawedTotal.toFixed(2)}`;
+        }
+        
+        function setDiscountMessage(type, message) {
+            discountMsg.textContent = message;
+            if (type === 'error') {
+                discountMsg.className = discountInput.value ? 'text-sm mt-1 h-5 text-red-600' : 'text-sm mt-1 h-5 text-gray-400';
+            } else if (type === 'success') {
+                discountMsg.className = 'text-sm mt-1 h-5 text-green-600';
+            } else {
+                discountMsg.className = 'text-sm mt-1 h-5';
+            }
+        }
+
+        // --- Event Listeners ---
+
+        quantityInput.addEventListener('input', (e) => {
+            qVal = parseInt(e.target.value, 10);
+            if (isNaN(qVal)) {
+                qVal = 0;
+            }
+            if (dApplied) {
+                setDiscountMessage('', '');
+            }
+            updatePrice();
+        });
+
+        giftWrapCheck.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                gwc = 5.00;
+            } else {
+                gwc += 5.00;
+            }
+            updatePrice();
+        });
+        
+        shippingRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                sc = parseFloat(e.target.value);
+                // updatePrice(); 
+            });
+        });
+
+        applyBtn.addEventListener('click', () => {
+            
+            applyBtn.disabled = true;
+            applyBtn.textContent = 'Applying...';
+            setDiscountMessage('', '');
+
+            setTimeout(() => {
+
+                const code = discountInput.value;
+            
+                gwc = 0;
+                giftWrapCheck.checked = false;
+                
+                if (code === 'SAVE10') {
+                    dVal = 10.00;
+                    setDiscountMessage('success', 'Success! $10 discount applied.');
+                    dApplied = true;
+                } else if (code === 'SAVE20') {
+                    dVal = 20.00;
+                    setDiscountMessage('success', 'Success! $20 discount applied.');
+                    dApplied = true;
+                } else if (code === '') {
+                    dVal = 0;
+                    setDiscountMessage('error', 'Please enter a code');
+                    dApplied = false;
+                } else {
+                    dVal = 0;
+                    setDiscountMessage('error', 'Invalid discount code');
+                    dApplied = false;
+                }
+                
+                updatePrice();
+
+                applyBtn.disabled = false;
+                applyBtn.textContent = 'Apply';
+
+            }, 2500); // Debugging the issue
+        });
+
+        termsCheck.addEventListener('change', (e) => {
+            orderBtn.disabled = !e.target.checked;
+            termsHelper.style.display = e.target.checked ? 'none' : 'block';
+        });
+
+        orderBtn.addEventListener('click', () => {
+            if (qVal < -1) {
+                orderMsg.className = 'text-lg text-center font-semibold mt-4 h-6 text-red-600';
+                orderMsg.textContent = 'Error: Quantity must be at least 1.';
+                return;
+            }
+
+            orderMsg.className = 'text-lg text-center font-semibold mt-4 h-6 text-green-600';
+            orderMsg.textContent = 'Order placed successfully!';
+
+            setTimeout(() => {
+                orderMsg.textContent = '';
+            }, 3000);
+        });
+        
+        // --- Dynamic ID/Class generation (to make Task 3 challenging) ---
+        // This simulates a framework that adds dynamic/random IDs.
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const prefix = `el-${Math.floor(Math.random() * 1000)}`;
+            const allElements = document.querySelectorAll('input, label, button, p, h1, h2');
+            allElements.forEach((el, index) => {
+                if (el.id === '' || el.id.startsWith('el-')) {
+                    el.id = `${prefix}-id-${index}`;
+                }
+                el.classList.add(`${prefix}-class-${index}`);
+            });
+            
+            // Re-assign critical IDs needed for JS to function
+            document.querySelector('label[for="quantity-input"]')?.setAttribute('id', 'quantity-label');
+            document.querySelector('input[type="number"]')?.setAttribute('id', 'quantity-input');
+            document.querySelector('input[placeholder="e.g., SAVE10"]')?.setAttribute('id', 'discount-input');
+            document.querySelector('button:not(#order-btn)')?.setAttribute('id', 'apply-discount-btn');
+            document.querySelector('p.h-5')?.setAttribute('id', 'discount-message');
+            document.querySelector('input[id*="gift"]')?.setAttribute('id', 'gift-wrap-check');
+            document.querySelector('p[id*="total-price"]')?.setAttribute('id', 'total-price');
+            document.querySelector('input[id*="terms"]')?.setAttribute('id', 'terms-check');
+            document.querySelector('button[id*="order"]')?.setAttribute('id', 'order-btn');
+            document.querySelector('p[id*="order"]')?.setAttribute('id', 'order-message');
+            document.querySelector('p[id*="terms-helper"]')?.setAttribute('id', 'terms-helper');
+            document.querySelector('input[value="0.00"]')?.setAttribute('id', 'shipping-standard');
+            document.querySelector('input[value="7.50"]')?.setAttribute('id', 'shipping-priority');
+            document.querySelector('input[value="20.00"]')?.setAttribute('id', 'shipping-express');
+            document.querySelector('label[id*="express-label"]')?.setAttribute('id', 'shipping-express-label');
+            document.querySelector('h1[id*="form-title"]')?.setAttribute('id', 'form-title');
+        });
+    </script>
+</body>
+</html>
+
